@@ -1,5 +1,3 @@
-import { Container } from './container'
-
 export * from './container'
 export * from './handler'
 export * from './injectable'
