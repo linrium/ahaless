@@ -71,6 +71,19 @@ import { HelloModule } from './src/hello/hello.module'
 export default class Handler {}
 ```
 
+Add the plugin `@ahamove/serverless-gen-functions` to your `serverless.yml` file:
+```yaml
+plugins:
+  - serverless-offline
+  - serverless-webpack
+  - @ahamove/serverless-gen-functions
+```
+
+After that, when you want to generate list functions. You can simply run the command line with option `--gf`:
+```bash
+sls offline --env staging --gf
+```
+
 ### Stay in touch
 * Author - lynkxyz
 * Company - AhaMove
