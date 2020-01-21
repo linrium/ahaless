@@ -10,30 +10,38 @@ export type SlsModuleOpts = {
   exportObject?: any
 }
 
-export function module({ imports = [], handlers = [], providers = [], root, exportObject }: SlsModuleOpts) {
+function addProviders(slsModuleOpts: SlsModuleOpts) {
+  const { handlers = [], providers = [], exportObject } = slsModuleOpts
+
+  providers.forEach(provider => {
+    container.addProvider({
+      provide: provider,
+      useClass: provider,
+    })
+  })
+
+  handlers.forEach(handler => {
+    container.addProvider({
+      provide: handler,
+      useClass: handler,
+    })
+
+    const instance = container.inject(handler)
+
+    instance.methodMeta?.forEach(function(method: MethodData) {
+      exportObject[method.fnName] = instance[method.fnName]
+    })
+  })
+}
+
+export function module(slsModuleOpts: SlsModuleOpts) {
+  const { imports = [], handlers = [], providers = [], root, exportObject } = slsModuleOpts
   return <T extends { new (...args: any[]): {} }>(constructor: T) => {
     if (root) {
-      imports.forEach(({ providers = [], handlers = [] }) => {
-        providers.forEach(provider => {
-          container.addProvider({
-            provide: provider,
-            useClass: provider,
-          })
-        })
-
-        handlers.forEach(handler => {
-          container.addProvider({
-            provide: handler,
-            useClass: handler,
-          })
-
-          const instance = container.inject(handler)
-
-          instance.methodMeta?.forEach(function(method: MethodData) {
-            exportObject[method.fnName] = instance[method.fnName]
-          })
-        })
+      imports.forEach(importObject => {
+        addProviders({ ...importObject, exportObject })
       })
+      addProviders({ providers, handlers, exportObject })
 
       return constructor
     }
