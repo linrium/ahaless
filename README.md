@@ -48,6 +48,7 @@ export class HelloHandler {
 
 ```typescript
 // ./src/hello/hello.module.ts
+
 import { module } from '@ahamove/ahaless'
 import { HelloHandler } from './src/hello.handler'
 
@@ -60,6 +61,7 @@ export class HelloModule {}
 
 ```typescript
 // ./handler.ts
+
 import { module } from '@ahamove/ahaless'
 import { HelloModule } from './src/hello/hello.module'
 
@@ -74,6 +76,7 @@ export default class Handler {}
 Add the plugin `@ahamove/serverless-gen-functions` to your `serverless.yml` file:
 ```yaml
 plugins:
+  - serverless-dotenv-plugin
   - serverless-offline
   - serverless-webpack
   - @ahamove/serverless-gen-functions
@@ -85,7 +88,6 @@ sls offline --env staging --gf
 ```
 
 ### Stay in touch
-* Author - lynkxyz
 * Company - AhaMove
 
 ### License
