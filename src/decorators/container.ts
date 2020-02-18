@@ -43,12 +43,12 @@ export class Container {
     return token instanceof InjectionToken ? token.injectionIdentifier : token.name
   }
 
-  addProvider<T>(provider: Provider<T>) {
+  public addProvider<T>(provider: Provider<T>) {
     Container.assertInjectableIfClassProvider(provider)
     this.providers.set(provider.provide, provider)
   }
 
-  inject<T>(type: Token<T>): T {
+  public inject<T>(type: Token<T>): T {
     let provider = this.providers.get(type)
 
     if (provider === undefined && !(type instanceof InjectionToken)) {
@@ -95,7 +95,7 @@ export class Container {
   }
 
   private getInjectedParams<T>(target: Type<T>) {
-    const argTypes = Reflect.getMetadata(REFLECT_PARAMS, target) as (InjectableParam | undefined)[]
+    const argTypes = Reflect.getMetadata(REFLECT_PARAMS, target) as Array<InjectableParam | undefined>
 
     if (argTypes === undefined) {
       return []
