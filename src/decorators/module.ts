@@ -34,10 +34,15 @@ function addProviders(slsModuleOpts: SlsModuleOpts) {
   })
 }
 
+export interface AhalessModule {
+  new (...args: any[]): any
+  exports?: string
+}
+
 export function module(slsModuleOpts: SlsModuleOpts) {
   const { imports = [], handlers = [], providers = [] } = slsModuleOpts
-  return <T extends new (...args: any[]) => {}>(constructor: T) => {
-    const exportObject = constructor.prototype.exports
+  return <T extends AhalessModule>(constructor: T) => {
+    const exportObject = constructor.exports
 
     if (exportObject) {
       imports.forEach(importObject => {
@@ -53,8 +58,4 @@ export function module(slsModuleOpts: SlsModuleOpts) {
       public static handlers = handlers
     }
   }
-}
-
-export interface AhalessModule {
-  exports: string
 }
