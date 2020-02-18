@@ -49,7 +49,7 @@ export function module(slsModuleOpts: SlsModuleOpts) {
     return class extends constructor {
       public static providers = providers
       public static handlers = handlers
-      public run() {
+      public run(exports: any) {
         imports.forEach(importObject => {
           addProviders({ ...importObject, exportObject: exports })
         })
@@ -62,7 +62,7 @@ export function module(slsModuleOpts: SlsModuleOpts) {
 // tslint:disable-next-line:max-classes-per-file
 export class AhalessModule {
   // tslint:disable-next-line:no-empty
-  public run() {
+  public run(exports: any) {
 
   }
 }
