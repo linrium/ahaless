@@ -4,7 +4,7 @@ import { Token, Type } from './types'
 export const INJECT_METADATA_KEY = Symbol('INJECT_KEY')
 
 export function injectable() {
-  return function(target: any) {
+  return (target: any) => {
     Reflect.defineMetadata(INJECTABLE_METADATA_KEY, true, target)
 
     return target
@@ -16,7 +16,7 @@ export function isInjectable<T>(target: Type<T>) {
 }
 
 export function inject(token: Token<any>) {
-  return function(target: any, _: string | symbol, index: number) {
+  return (target: any, _: string | symbol, index: number) => {
     Reflect.defineMetadata(INJECT_METADATA_KEY, token, target, `index-${index}`)
 
     return target

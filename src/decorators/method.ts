@@ -1,13 +1,13 @@
 import { MethodData } from './handler'
 import { bodyMetadataKey, handlerMetaKey, paramMetadataKey } from './metadataKey'
 
-export function method(method: string, path?: string, opts?: any): MethodDecorator {
-  return function(target: any, propertyKey: string | symbol, descriptor: PropertyDescriptor) {
+export function method(mtd: string, path?: string, opts?: any): MethodDecorator {
+  return (target: any, propertyKey: string | symbol, descriptor: PropertyDescriptor) => {
     const originalMethod = descriptor.value
     const methodMeta: MethodData[] = Reflect.getMetadata(handlerMetaKey, target) ?? []
     methodMeta.push({
       fnName: propertyKey,
-      method,
+      method: mtd,
       path: path ?? propertyKey,
       opts,
     })

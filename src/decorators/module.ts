@@ -2,10 +2,10 @@ import { container } from './container'
 import { MethodData } from './handler'
 import { ModuleType, Type } from './types'
 
-export type SlsModuleOpts = {
-  imports?: ModuleType<any>[]
-  handlers?: Type<any>[]
-  providers?: Type<any>[]
+export interface SlsModuleOpts {
+  imports?: Array<ModuleType<any>>
+  handlers?: Array<Type<any>>
+  providers?: Array<Type<any>>
   root?: boolean
   exportObject?: any
 }
@@ -28,7 +28,7 @@ function addProviders(slsModuleOpts: SlsModuleOpts) {
 
     const instance = container.inject(handler)
 
-    instance.methodMeta?.forEach(function(method: MethodData) {
+    instance.methodMeta?.forEach((method: MethodData) => {
       exportObject[method.fnName] = instance[method.fnName]
     })
   })
@@ -36,19 +36,33 @@ function addProviders(slsModuleOpts: SlsModuleOpts) {
 
 export function module(slsModuleOpts: SlsModuleOpts) {
   const { imports = [], handlers = [], providers = [], root, exportObject } = slsModuleOpts
-  return <T extends { new (...args: any[]): {} }>(constructor: T) => {
-    if (root) {
-      imports.forEach(importObject => {
-        addProviders({ ...importObject, exportObject })
-      })
-      addProviders({ providers, handlers, exportObject })
-
-      return constructor
-    }
+  return <T extends new (...args: any[]) => {}>(constructor: T) => {
+    // if (root) {
+    //   imports.forEach(importObject => {
+    //     addProviders({ ...importObject, exportObject })
+    //   })
+    //   addProviders({ providers, handlers, exportObject })
+    //
+    //   return constructor
+    // }
 
     return class extends constructor {
-      static providers = providers
-      static handlers = handlers
+      public static providers = providers
+      public static handlers = handlers
+      public run() {
+        imports.forEach(importObject => {
+          addProviders({ ...importObject, exportObject: exports })
+        })
+        addProviders({ providers, handlers, exportObject: exports })
+      }
     }
+  }
+}
+
+// tslint:disable-next-line:max-classes-per-file
+export class AhalessModule {
+  // tslint:disable-next-line:no-empty
+  public run() {
+
   }
 }
