@@ -37,32 +37,18 @@ function addProviders(slsModuleOpts: SlsModuleOpts) {
 export function module(slsModuleOpts: SlsModuleOpts) {
   const { imports = [], handlers = [], providers = [], root, exportObject } = slsModuleOpts
   return <T extends new (...args: any[]) => {}>(constructor: T) => {
-    // if (root) {
-    //   imports.forEach(importObject => {
-    //     addProviders({ ...importObject, exportObject })
-    //   })
-    //   addProviders({ providers, handlers, exportObject })
-    //
-    //   return constructor
-    // }
+    if (root) {
+      imports.forEach(importObject => {
+        addProviders({ ...importObject, exportObject })
+      })
+      addProviders({ providers, handlers, exportObject })
+
+      return constructor
+    }
 
     return class extends constructor {
       public static providers = providers
       public static handlers = handlers
-      public run(exports: any) {
-        imports.forEach(importObject => {
-          addProviders({ ...importObject, exportObject: exports })
-        })
-        addProviders({ providers, handlers, exportObject: exports })
-      }
     }
-  }
-}
-
-// tslint:disable-next-line:max-classes-per-file
-export class AhalessModule {
-  // tslint:disable-next-line:no-empty
-  public run(exports: any) {
-
   }
 }
