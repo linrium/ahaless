@@ -35,9 +35,11 @@ function addProviders(slsModuleOpts: SlsModuleOpts) {
 }
 
 export function module(slsModuleOpts: SlsModuleOpts) {
-  const { imports = [], handlers = [], providers = [], root, exportObject } = slsModuleOpts
+  const { imports = [], handlers = [], providers = [] } = slsModuleOpts
   return <T extends new (...args: any[]) => {}>(constructor: T) => {
-    if (root) {
+    const exportObject = constructor.prototype.exports
+
+    if (exportObject) {
       imports.forEach(importObject => {
         addProviders({ ...importObject, exportObject })
       })
@@ -51,4 +53,8 @@ export function module(slsModuleOpts: SlsModuleOpts) {
       public static handlers = handlers
     }
   }
+}
+
+export interface AhalessModule {
+  exports: string
 }

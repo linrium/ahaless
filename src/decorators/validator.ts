@@ -1,7 +1,6 @@
 import { validate } from 'class-validator'
 import { plainToClass } from 'class-transformer'
-
-const validatorMetadataKey = Symbol('validator')
+import { validatorMetadataKey } from './metadataKey'
 
 export function validator() {
   return (
@@ -54,7 +53,6 @@ export function validator() {
               }
             }
           })
-
         }
       }
 
