@@ -4,12 +4,12 @@ Write serverless application on top of Typescript
 To install the AhaLess library into an existing project, use the `yarn` CLI 
 ```bash
 yarn add @ahamove/ahaless 
-yarn add serverless-webpack @ahamove/serverless-gen-functions -D
+yarn add serverless-webpack @ahamove/serverless-generate-functions -D
 ```
 or the `npm` CLI
 ```bash
 npm install @ahamove/ahaless
-npm add serverless-webpack @ahamove/serverless-gen-functions -D
+npm add serverless-webpack @ahamove/serverless-generate-functions -D
 ```
 
 ### Examples
@@ -67,10 +67,10 @@ import { HelloModule } from './src/hello/hello.module'
 
 @module({
   imports: [HelloModule],
-  root: true,
-  exportObject: exports
 })
-export default class Handler {}
+export class Handler {
+  static exports = exports
+}
 ```
 
 Add the plugin `@ahamove/serverless-gen-functions` to your `serverless.yml` file:
@@ -79,7 +79,7 @@ plugins:
   - serverless-dotenv-plugin
   - serverless-offline
   - serverless-webpack
-  - @ahamove/serverless-gen-functions
+  - @ahamove/serverless-generate-functions
 ```
 
 After that, when you want to generate list functions. You can simply run the command line with option `--gf`:
