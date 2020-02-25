@@ -10,7 +10,7 @@ export interface SlsModuleOpts {
   exportObject?: any
 }
 
-function addProviders(slsModuleOpts: SlsModuleOpts) {
+export function addProviders(slsModuleOpts: SlsModuleOpts) {
   const { handlers = [], providers = [], exportObject } = slsModuleOpts
 
   providers.forEach((provider: any) => {

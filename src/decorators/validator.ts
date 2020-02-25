@@ -1,8 +1,13 @@
-import { validate } from 'class-validator'
+import { validate, ValidatorOptions } from 'class-validator'
 import { plainToClass } from 'class-transformer'
 import { validatorMetadataKey } from './metadataKey'
 
-export function validator() {
+export function validator(validatorOptions: ValidatorOptions = {
+  validationError: {
+    value: false,
+    target: false
+  }
+}) {
   return (
     target: any,
     propertyKey: string,
@@ -36,11 +41,7 @@ export function validator() {
           }
           const obj = plainToClass(classType, value)
 
-          return validate(obj, {
-            validationError: {
-              target: false
-            }
-          })
+          return validate(obj, validatorOptions)
         })
 
         const errors = await Promise.all(validatorP)
