@@ -1,5 +1,5 @@
 import { MethodData } from './handler'
-import { bodyMetadataKey, handlerMetaKey, paramMetadataKey } from './metadataKey'
+import { bodyMetadataKey, handlerMetaKey, paramMetadataKey, eventMetadataKey, snsMetadataKey } from './metadataKey'
 
 export function method(mtd: string, path?: string, opts?: any): MethodDecorator {
   return (target: any, propertyKey: string | symbol, descriptor: PropertyDescriptor) => {
@@ -18,20 +18,50 @@ export function method(mtd: string, path?: string, opts?: any): MethodDecorator 
         context.callbackWaitsForEmptyEventLoop = false
         const bodyIndexes: number[] = Reflect.getOwnMetadata(bodyMetadataKey, target, propertyKey) ?? []
         const paramIndexes: number[] = Reflect.getOwnMetadata(paramMetadataKey, target, propertyKey) ?? []
+        const eventIndexes: number[] = Reflect.getOwnMetadata(eventMetadataKey, target, propertyKey) ?? []
+        const snsIndexes: number[] = Reflect.getOwnMetadata(snsMetadataKey, target, propertyKey) ?? []
 
-        const body = JSON.parse(event.body)
+        let body: any = undefined
+        try {
+          body = JSON.parse(event.body)
+        } catch (e) {
+          body = event.body
+        }
+
 
         const argArray: number[] = []
 
-        if (bodyIndexes?.length > 0) {
+        if (Array.isArray(bodyIndexes)) {
+
           bodyIndexes.forEach(index => {
             argArray[index] = body
           })
         }
 
-        if (paramIndexes?.length > 0) {
+        if (Array.isArray(paramIndexes)) {
           paramIndexes.forEach(index => {
             argArray[index] = event.queryStringParameters
+          })
+        }
+
+        if (Array.isArray(eventIndexes)) {
+          eventIndexes.forEach(index => {
+            argArray[index] = event
+          })
+        }
+
+        if (Array.isArray(snsIndexes)) {
+          let data: any = undefined
+          try {
+            event.Records?.[0].EventSource === 'aws:sns' ?
+              JSON.parse(event.Records[0].Sns.Message) :
+              body
+          } catch (e) {
+            data = undefined
+          }
+
+          eventIndexes.forEach(index => {
+            argArray[index] = data
           })
         }
 
