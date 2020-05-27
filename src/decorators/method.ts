@@ -49,11 +49,14 @@ export function method(mtd: string, path?: string, opts?: any): MethodDecorator 
         }
 
         if (Array.isArray(snsIndexes)) {
-          let data: any
-          try {
-            data = event.Records?.[0].EventSource === 'aws:sns' ? JSON.parse(event.Records[0].Sns.Message) : body
-          } catch (e) {
-            data = undefined
+          let data: any = body
+
+          if (event.Records?.[0].EventSource === 'aws:sns') {
+            try {
+              data = JSON.parse(event.Records[0].Sns.Message)
+            } catch (e) {
+              data = event.Records[0].Sns.Message
+            }
           }
 
           snsIndexes.forEach(index => {
