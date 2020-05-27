@@ -21,7 +21,7 @@ export function method(mtd: string, path?: string, opts?: any): MethodDecorator 
         const eventIndexes: number[] = Reflect.getOwnMetadata(eventMetadataKey, target, propertyKey) ?? []
         const snsIndexes: number[] = Reflect.getOwnMetadata(snsMetadataKey, target, propertyKey) ?? []
 
-        let body: any = undefined
+        let body: any
         try {
           body = JSON.parse(event.body)
         } catch (e) {
@@ -32,7 +32,6 @@ export function method(mtd: string, path?: string, opts?: any): MethodDecorator 
         const argArray: number[] = []
 
         if (Array.isArray(bodyIndexes)) {
-
           bodyIndexes.forEach(index => {
             argArray[index] = body
           })
@@ -51,9 +50,9 @@ export function method(mtd: string, path?: string, opts?: any): MethodDecorator 
         }
 
         if (Array.isArray(snsIndexes)) {
-          let data: any = undefined
+          let data: any
           try {
-            event.Records?.[0].EventSource === 'aws:sns' ?
+            data = event.Records?.[0].EventSource === 'aws:sns' ?
               JSON.parse(event.Records[0].Sns.Message) :
               body
           } catch (e) {

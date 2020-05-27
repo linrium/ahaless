@@ -36,11 +36,6 @@ export function event(): ParameterDecorator {
   }
 }
 
-export type SnsOptions = {
-  json: boolean,
-  fallback: boolean
-}
-
 export function sns(): ParameterDecorator {
   return (target: any, propertyKey: string | symbol, parameterIndex: number) => {
     const snsIndexes: number[] = Reflect.getOwnMetadata(snsMetadataKey, target, propertyKey) ?? []
