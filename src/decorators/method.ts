@@ -28,7 +28,6 @@ export function method(mtd: string, path?: string, opts?: any): MethodDecorator 
           body = event.body
         }
 
-
         const argArray: number[] = []
 
         if (Array.isArray(bodyIndexes)) {
@@ -59,7 +58,7 @@ export function method(mtd: string, path?: string, opts?: any): MethodDecorator 
             data = undefined
           }
 
-          eventIndexes.forEach(index => {
+          snsIndexes.forEach(index => {
             argArray[index] = data
           })
         }
