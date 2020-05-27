@@ -1,19 +1,16 @@
-import { bodyMetadataKey, eventMetadataKey, paramMetadataKey, validatorMetadataKey, snsMetadataKey, snsOptionsKey } from './metadataKey'
+import {
+  bodyMetadataKey,
+  eventMetadataKey,
+  paramMetadataKey,
+  validatorMetadataKey,
+  snsMetadataKey,
+  snsOptionsKey,
+} from './metadataKey'
 
-export function validate(
-  target: any,
-  propertyKey: string | symbol,
-  parameterIndex: number,
-) {
-  const validateIndexes: number[] =
-    Reflect.getOwnMetadata(validatorMetadataKey, target, propertyKey) ?? []
+export function validate(target: any, propertyKey: string | symbol, parameterIndex: number) {
+  const validateIndexes: number[] = Reflect.getOwnMetadata(validatorMetadataKey, target, propertyKey) ?? []
   validateIndexes.push(parameterIndex)
-  Reflect.defineMetadata(
-    validatorMetadataKey,
-    validateIndexes,
-    target,
-    propertyKey,
-  )
+  Reflect.defineMetadata(validatorMetadataKey, validateIndexes, target, propertyKey)
 }
 
 export function body(): ParameterDecorator {

@@ -9,7 +9,7 @@ export interface MethodData {
 }
 
 export function handler() {
-  return <T extends { methodMeta?: MethodData[]; new (...args: any[]): {}; }>(constructor: T) => {
+  return <T extends { methodMeta?: MethodData[]; new (...args: any[]): {} }>(constructor: T) => {
     const methodMeta: MethodData[] = Reflect.getMetadata(handlerMetaKey, constructor.prototype) ?? []
 
     Reflect.defineMetadata(INJECTABLE_METADATA_KEY, true, constructor)

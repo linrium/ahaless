@@ -51,9 +51,7 @@ export function method(mtd: string, path?: string, opts?: any): MethodDecorator 
         if (Array.isArray(snsIndexes)) {
           let data: any
           try {
-            data = event.Records?.[0].EventSource === 'aws:sns' ?
-              JSON.parse(event.Records[0].Sns.Message) :
-              body
+            data = event.Records?.[0].EventSource === 'aws:sns' ? JSON.parse(event.Records[0].Sns.Message) : body
           } catch (e) {
             data = undefined
           }
