@@ -1,0 +1,35 @@
+{
+  "get_cats": {
+    "handler": "handler.getCats",
+    "events": [
+      {
+        "http": {
+          "method": "get",
+          "path": "get_cats"
+        }
+      }
+    ]
+  },
+  "get_cat": {
+    "handler": "handler.getCat",
+    "events": [
+      {
+        "http": {
+          "method": "get",
+          "path": "get_cat"
+        }
+      }
+    ]
+  },
+  "create_cat": {
+    "handler": "handler.create_cat",
+    "events": [
+      {
+        "http": {
+          "method": "post",
+          "path": "create_cat"
+        }
+      }
+    ]
+  }
+}

@@ -48,7 +48,7 @@ export class Container {
     this.providers.set(provider.provide, provider)
   }
 
-  public inject<T>(type: Token<T>): T {
+  public async inject<T>(type: Token<T>): Promise<T> {
     let provider = this.providers.get(type)
 
     if (provider === undefined && !(type instanceof InjectionToken)) {
@@ -60,7 +60,7 @@ export class Container {
       Container.assertInjectableIfClassProvider(provider)
     }
 
-    return this.injectWithProvider(type, provider)
+    return await this.injectWithProvider(type, provider)
   }
 
   private injectWithProvider<T>(type: Token<T>, provider?: Provider<T>): T {
@@ -68,6 +68,7 @@ export class Container {
       throw new Error(`No provider for type ${Container.getTokenName(type)}`)
     }
 
+    console.log(type, provider)
     if (isClassProvider(provider)) {
       return this.injectClass(provider as ClassProvider<T>)
     }

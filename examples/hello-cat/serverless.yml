@@ -1,0 +1,43 @@
+service:
+  name: hello-cat
+# app and org for use with dashboard.serverless.com
+#app: your-app-name
+#org: your-org-name
+
+provider:
+  name: aws
+  runtime: nodejs12.x
+  stage: ${env:STAGE,'staging'}
+  versionFunctions: false
+  logRetentionInDays: 3
+  region: ap-southeast-1
+  memorySize: 128 # Overwrite the default memory size. Default is 1024
+  timeout: 30 # The default is 6 seconds. Note: API Gateway current maximum is 30 seconds
+  apiGateway:
+    minimumCompressionSize: 1024 # Enable gzip compression for responses > 1 KB
+  environment:
+    AWS_NODEJS_CONNECTION_REUSE_ENABLED: 1
+
+custom:
+  webpack:
+    webpackConfig: ./webpack.config.js
+    includeModules: true
+    excludeFiles: ./**/*.sls.js
+  customDomain:
+    domainName: ghn-freshdesk.ahamove.net
+    certificateName: "*.ahamove.net"
+    stage: ${self:provider.stage}
+    basePath: ${self:provider.stage}
+    createRoute53Record: true
+    sercurityPolicy: tls_1_2
+    endpointType: 'regional'
+
+functions: ${file(./.ahaless/functions.sls.json)}
+
+# Add the serverless-webpack plugin
+plugins:
+  - "@ahamove/serverless-generate-functions"
+  - serverless-dotenv-plugin
+  - serverless-webpack
+  - serverless-domain-manager
+  - serverless-offline

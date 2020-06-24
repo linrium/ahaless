@@ -10,7 +10,7 @@ export interface SlsModuleOpts {
   exportObject?: any
 }
 
-export function addProviders(slsModuleOpts: SlsModuleOpts) {
+export async function addProviders(slsModuleOpts: SlsModuleOpts) {
   const { handlers = [], providers = [], exportObject } = slsModuleOpts
 
   providers.forEach((provider: any) => {
@@ -24,14 +24,19 @@ export function addProviders(slsModuleOpts: SlsModuleOpts) {
     }
   })
 
-  handlers.forEach(handler => {
+  const handlersP = await Promise.all(handlers.map(handler => {
+    console.log('handler', handler)
     container.addProvider({
       provide: handler,
       useClass: handler,
     })
 
-    const instance = container.inject(handler)
+    return container.inject(handler)
+  }))
 
+  console.log('handlersP', handlersP)
+  handlersP.forEach((instance: any) => {
+    console.log('instance', instance)
     exportObject.metadata.push(instance.methodMeta)
 
     instance.methodMeta?.forEach((method: MethodData) => {
@@ -47,19 +52,21 @@ export interface AhalessModule {
 
 export function module(slsModuleOpts: SlsModuleOpts) {
   const { imports = [], handlers = [], providers = [] } = slsModuleOpts
-  return <T extends AhalessModule>(constructor: T) => {
+  return async <T extends AhalessModule>(constructor: T) => {
     const exportObject: any = constructor.exports
 
     if (exportObject) {
       exportObject.metadata = []
 
-      imports.forEach(importObject => {
+      await Promise.all(imports.map(importObject => {
         addProviders({ ...importObject, exportObject })
-      })
-      addProviders({ providers, handlers, exportObject })
+      }))
+      await addProviders({ providers, handlers, exportObject })
 
       return constructor
     }
+
+    console.log(providers)
 
     return class extends constructor {
       public static providers = providers
