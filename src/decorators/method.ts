@@ -71,11 +71,18 @@ export function method(mtd: string, path?: string, opts?: any): MethodDecorator 
           body: JSON.stringify(result),
         }
       } catch (e) {
+        if (e instanceof Error) {
+          return {
+            statusCode: 400,
+            body: JSON.stringify({
+              message: e.message,
+            }),
+          }
+        }
+
         return {
-          statusCode: 404,
-          body: JSON.stringify({
-            message: e.message,
-          }),
+          statusCode: e.statusCode ?? 400,
+          body: JSON.stringify(e),
         }
       }
     }
