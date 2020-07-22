@@ -66,6 +66,10 @@ export function method(mtd: string, path?: string, opts?: any): MethodDecorator 
 
         const result = await originalMethod.apply(this, argArray)
 
+        if (result.isCustomResp) {
+          return result.content
+        }
+
         return {
           statusCode: 200,
           body: JSON.stringify(result),
