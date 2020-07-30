@@ -66,7 +66,7 @@ export function method(mtd: string, path?: string, opts?: any): MethodDecorator 
 
         const result = await originalMethod.apply(this, argArray)
 
-        if (result.isCustomResp) {
+        if (result?.isCustomResp) {
           return result.content
         }
 

@@ -43,7 +43,7 @@ export function sns(): ParameterDecorator {
   }
 }
 
-export function param(): ParameterDecorator {
+export function params(): ParameterDecorator {
   return (target: any, propertyKey: string | symbol, parameterIndex: number) => {
     const paramIndexes: number[] = Reflect.getOwnMetadata(paramMetadataKey, target, propertyKey) ?? []
     paramIndexes.push(parameterIndex)
