@@ -75,7 +75,7 @@ export function method(mtd: string, path?: string, opts?: any): MethodDecorator 
           body: JSON.stringify(result),
         }
       } catch (e) {
-        if (e instanceof Error) {
+        if (!e.statusCode) {
           return {
             statusCode: 400,
             body: JSON.stringify({
@@ -85,7 +85,7 @@ export function method(mtd: string, path?: string, opts?: any): MethodDecorator 
         }
 
         return {
-          statusCode: e.statusCode ?? 400,
+          statusCode: e.statusCode,
           body: JSON.stringify(e),
         }
       }
