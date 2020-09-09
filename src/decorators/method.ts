@@ -83,11 +83,18 @@ export function method(mtd: string, path?: string, opts?: any): MethodDecorator 
         }
 
         if (!e.statusCode) {
-          return {
-            statusCode: 400,
-            body: JSON.stringify({
-              message: e.message,
-            }),
+          if (typeof e === 'string') {
+            return {
+              statusCode: 400,
+              body: e,
+            }
+          }
+
+          if (typeof e === 'object') {
+            return {
+              statusCode: 400,
+              body: JSON.stringify(e),
+            }
           }
         }
 
