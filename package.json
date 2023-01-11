@@ -36,7 +36,7 @@
   "dependencies": {
     "@abraham/reflection": "^0.7.0",
     "class-transformer": "^0.3.1",
-    "class-validator": "^0.12.2"
+    "class-validator": "^0.14.0"
   },
   "devDependencies": {
     "@types/jest": "^24.9.0",
